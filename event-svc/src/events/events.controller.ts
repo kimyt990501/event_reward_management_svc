@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards, Param } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -16,8 +16,13 @@ export class EventsController {
     return this.service.create(body);
   }
 
-  @Get()
-  findAll() {
-    return this.service.findAll();
+  @Get('summary')
+  async getEventsSummary() {
+    return this.service.findAllSummary();
+  }
+
+  @Get('detail/:id')
+  async getEventDetail(@Param('id') id: string) {
+    return this.service.findDetailById(id);
   }
 }
