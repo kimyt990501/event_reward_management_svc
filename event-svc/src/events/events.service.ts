@@ -21,6 +21,34 @@ export class EventsService {
     return this.eventModel.findById(id);
   }
 
+  async findAllSummary() {
+    return this.eventModel.find({}, { 
+      _id: 1, 
+      title: 1, 
+      active: 1, 
+      startAt: 1, 
+      endAt: 1 
+    }).exec();
+  }
+
+  async findDetailById(id: string) {
+    const event = await this.eventModel.findById(id, {
+      _id: 1,
+      title: 1,
+      description: 1,
+      condition: 1,
+      active: 1,
+      startAt: 1,
+      endAt: 1,
+    }).exec();
+
+    if (!event) {
+      throw new HttpException('Event not found', HttpStatus.NOT_FOUND);
+    }
+
+    return event;
+  }
+
   private async getUserById(userId: string): Promise<any> {
     const authSvcUrl = process.env.AUTH_SVC_URL || 'http://auth-svc:3100';
 
