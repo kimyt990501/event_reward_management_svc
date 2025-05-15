@@ -1,128 +1,122 @@
-# 이벤트/보상 관리 플랫폼 (NestJS MSA)
+# 이벤트 / 보상 관리 플랫폼 Backend 프로젝트
+
+---
 
 ## 프로젝트 개요
+본 프로젝트는 NestJS, MongoDB, JWT 인증을 활용하여 이벤트 및 보상 관리 시스템을 구현하는 백엔드 서비스입니다.  
+3개의 마이크로서비스 구조로 구성되어 있으며, 각각 다음 역할을 수행합니다.
 
-이 프로젝트는 NestJS와 MongoDB 기반으로 구축된 이벤트/보상 관리 시스템입니다.  
-MSA 아키텍처로 세 개의 서비스(`auth-svc`, `event-svc`, `gateway-svc`)와 MongoDB 컨테이너로 구성되어 있습니다.
-
----
-
-## 서비스 구성 및 역할
-
-| 서비스 이름    | 포트  | 역할                                                         |
-|---------------|-------|--------------------------------------------------------------|
-| auth-svc      | 3100  | 유저 등록, 로그인, JWT 발급, 역할 관리                       |
-| event-svc     | 3200  | 이벤트/보상 생성 및 관리, 유저 보상 요청 처리                |
-| gateway-svc   | 3300  | API 게이트웨이, JWT 인증 및 역할 기반 권한 검사, 요청 라우팅  |
-| mongo         | 27017 | MongoDB 데이터베이스                                        |
+- **auth-svc** : 유저 인증, 권한 관리, JWT 발급  
+- **event-svc** : 이벤트/보상 생성 및 조회, 유저 보상 요청 처리  
+- **gateway-svc** : 모든 API 요청의 진입점, 인증 및 권한 검사, 각 서비스로 프록시 역할 수행  
 
 ---
 
-## 주요 기술 스택
-
-- Node.js 18.x
-- NestJS 최신 버전
-- MongoDB 6.x
-- JWT 기반 인증 및 역할 기반 권한 관리
-- Docker & Docker Compose
+## 기술 스택
+- Node.js 18
+- NestJS (최신)
+- MongoDB
+- JWT 인증
+- Docker + Docker Compose
 - TypeScript
 
 ---
 
-## 실행 방법
+## 주요 기능 및 API
 
-1. Docker 및 Docker Compose 설치 ([공식 문서](https://docs.docker.com/compose/install/))
+### Auth Service (auth-svc)
+- 유저 등록, 로그인
+- 역할(Role) 관리 (USER, OPERATOR, AUDITOR, ADMIN)
+- JWT 토큰 발급 및 검증
 
-2. 각 서비스 폴더에 `.env` 파일 생성 및 환경 변수 설정
+### Event Service (event-svc)
+- 이벤트 등록, 조회 (조건, 기간, 상태 포함)
+- 보상 등록, 조회 (포인트, 아이템, 쿠폰 등)
+- 유저 보상 요청 처리 (중복 요청 방지, 조건 검증)
+- 보상 요청 내역 조회 (유저별 및 전체)
 
-예시: auth-svc/.env
+### Gateway Service (gateway-svc)
+- JWT 인증 및 역할 기반 권한 검사
+- 각 서비스 API 요청 프록시
+- API 엔드포인트 예시:
+  - `POST /events` (운영자/관리자 권한 필요)
+  - `POST /requests/:eventId` (유저 권한)
+  - `GET /requests` (역할별 조회 가능)
 
-\`\`\`env
-PORT=3100
-MONGO_URI=mongodb://mongo:27017/auth-db
-JWT_SECRET=secret
-JWT_EXPIRES_IN=1h
-\`\`\`
+---
 
-예시: event-svc/.env
+## 개발 및 실행 환경 설정
 
-\`\`\`env
-PORT=3200
-MONGO_URI=mongodb://mongo:27017/event-db
-JWT_SECRET=secret
-JWT_EXPIRES_IN=1h
-\`\`\`
+### 환경변수 (.env)
+각 서비스 루트에 `.env` 파일을 생성 후 다음 환경변수를 설정합니다.
 
-예시: gateway-svc/.env
+```env
+MONGO_URI=mongodb://mongo:27017/reward-db
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRES_IN=3600s
+PORT=서비스별 포트 설정 (auth: 3100, event: 3200, gateway: 3300 등)
+```
 
-\`\`\`env
-PORT=3300
-JWT_SECRET=secret
-JWT_EXPIRES_IN=1h
-\`\`\`
+---
 
-3. 루트 디렉토리에서 Docker Compose 실행
+## Docker Compose 실행
 
-\`\`\`bash
+```bash
 docker-compose up --build
-\`\`\`
+```
 
-4. 서비스가 정상 실행되면 아래 포트로 접근 가능
-
-- http://localhost:3100 — auth-svc  
-- http://localhost:3200 — event-svc  
-- http://localhost:3300 — gateway-svc  
+- MongoDB 포함하여 3개 서비스가 자동으로 빌드 및 실행됩니다.
+- 각 서비스는 설정된 포트에서 API 요청 대기 중입니다.
 
 ---
 
-## API 테스트 가이드
+## 테스트 방법
 
-### 1. 유저 등록 및 로그인 (auth-svc)
-
-- POST /auth/register : 유저 생성 (역할 포함)  
-- POST /auth/login : 로그인 후 JWT 토큰 발급  
-
-### 2. 이벤트 & 보상 관리 (gateway-svc → event-svc)
-
-- POST /events : 이벤트 생성 (OPERATOR, ADMIN 권한)  
-- POST /rewards : 보상 생성 (OPERATOR, ADMIN 권한)  
-
-### 3. 유저 보상 요청 (gateway-svc → event-svc)
-
-- POST /requests/:eventId : 보상 요청 (USER 권한)  
-- GET /requests/my : 본인 보상 요청 이력 조회 (USER 권한)  
-- GET /requests : 전체 보상 요청 내역 조회 (AUDITOR, OPERATOR, ADMIN 권한)  
+### Postman API 테스트 예시
+- 역할별 계정을 생성 후 로그인하여 JWT 토큰 획득
+- 헤더에 `Authorization: Bearer <토큰>` 추가
+- Gateway 서비스를 통해 이벤트 생성, 보상 요청 등 API 호출 가능
 
 ---
 
-## 역할별 권한 요약
+## 테스트 코드
 
-| 역할      | 가능 작업                                |
-|-----------|----------------------------------------|
-| USER      | 보상 요청, 본인 요청 내역 조회          |
-| OPERATOR  | 이벤트/보상 생성, 전체 요청 내역 조회    |
-| AUDITOR   | 전체 요청 내역 조회                     |
-| ADMIN     | 모든 기능 접근 가능                      |
-
----
-
-## 추가 정보
-
-- JWT 토큰은 Authorization: Bearer <token> 헤더로 API 요청에 포함해야 합니다.  
-- 모든 서비스는 `.env` 파일을 통해 민감 정보 및 포트를 관리합니다.  
-- 각 서비스는 독립적으로 동작하며, Docker Compose로 통합 실행됩니다.  
-- 테스트는 Postman 또는 curl을 통해 가능합니다.  
+- 각 서비스별 단위 테스트 및 통합 테스트 포함
+- Jest 사용
+- 예시 테스트 시나리오
+  - AuthService : 유저 인증 및 JWT 발급 검증
+  - EventsService : 이벤트 생성/조회 테스트
+  - RequestsService : 보상 요청 시나리오 및 중복 방지 검증
+  - RewardsService : 보상 등록 및 조회 테스트
+  - ProxyController : API 프록시 정상 동작 테스트
 
 ---
 
-## 프로젝트 구조
+## 설계 및 구현 포인트
 
-\`\`\`
-├── auth-svc/
-├── event-svc/
-├── gateway-svc/
-├── docker-compose.yml
-├── README.md
-\`\`\`
+- 역할(Role) 기반 권한 관리 엄격 적용 (USER, OPERATOR, AUDITOR, ADMIN)
+- 이벤트 조건 검증 로직 분리 및 확장 용이하게 설계 (예: 로그인 3일, 친구 초대 등)
+- 보상 지급 자동화 및 중복 요청 방지 로직 포함
+- MSA 구조에 따른 서비스 간 책임 분리
+- JWT 인증 및 권한 검증으로 보안 강화
+- Docker 기반 배포 및 실행 환경 구성
+
+---
+
+## 추가 참고사항
+
+- 보상 조건 및 이벤트 종류는 자유롭게 확장 가능
+- 테스트 시 JWT 토큰을 여러 역할별로 발급 받아 테스트하는 것을 권장
+- 자세한 API 명세 및 사용법은 코드 내 Swagger 문서 또는 별도 문서 참고
+- 환경 변수 및 서비스 포트는 `.env` 파일에서 조정 가능
+
+---
+
+## 실행 및 배포
+
+1. `.env` 파일 작성  
+2. `docker-compose up --build` 실행  
+3. 서비스 정상 실행 확인  
+4. Postman 등으로 Gateway 서버 API 호출하여 기능 테스트  
 
 ---
