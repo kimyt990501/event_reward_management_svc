@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  mongo:
+    image: mongo:6
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  auth-svc:
+    build: ./auth-svc
+    container_name: auth-svc
+    restart: always
+    env_file:
+      - ./auth-svc/.env
+    ports:
+      - "${AUTH_PORT:-3100}:3100"
+    depends_on:
+      - mongo
+
+  event-svc:
+    build: ./event-svc
+    container_name: event-svc
+    restart: always
+    env_file:
+      - ./event-svc/.env
+    ports:
+      - "${EVENT_PORT:-3200}:3200"
+    depends_on:
+      - mongo
+
+  gateway-svc:
+    build: ./gateway-svc
+    container_name: gateway-svc
+    restart: always
+    env_file:
+      - ./gateway-svc/.env
+    ports:
+      - "${GATEWAY_PORT:-3300}:3300"
+    depends_on:
+      - auth-svc
+      - event-svc
+
+volumes:
+  mongo-data:
