@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
@@ -42,6 +43,8 @@ import { JwtStrategy } from './auth/jwt.strategy';
     ]),
 
     PassportModule,
+
+    HttpModule,
   ],
   controllers: [
     EventsController,
