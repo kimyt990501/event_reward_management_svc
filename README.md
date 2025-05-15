@@ -62,7 +62,7 @@ PORT=서비스별 포트 설정 (auth: 3100, event: 3200, gateway: 3300 등)
 ## Docker Compose 실행
 
 ```bash
-docker-compose up --build
+docker-compose up -d --build
 ```
 
 - MongoDB 포함하여 3개 서비스가 자동으로 빌드 및 실행됩니다.
