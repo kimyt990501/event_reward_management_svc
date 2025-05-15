@@ -69,11 +69,35 @@ export class ProxyController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.AUDITOR, Role.ADMIN)
+  @Roles(Role.AUDITOR, Role.ADMIN, Role.OPERATOR)
   @Get('/requests')
   async getRequests(@Req() req, @Res() res) {
     const { data } = await firstValueFrom(
       this.httpService.get('http://event-svc:3200/requests', {
+        headers: { Authorization: req.headers.authorization },
+      }),
+    );
+    return res.send(data);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.OPERATOR)
+  @Get('/rewards')
+  async getAllRewards(@Req() req, @Res() res) {
+    const { data } = await firstValueFrom(
+      this.httpService.get('http://event-svc:3200/rewards', {
+        headers: { Authorization: req.headers.authorization },
+      }),
+    );
+    return res.send(data);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.OPERATOR)
+  @Get('/rewards/event/:eventId')
+  async getRewardsByEvent(@Req() req, @Param('eventId') eventId: string, @Res() res) {
+    const { data } = await firstValueFrom(
+      this.httpService.get(`http://event-svc:3200/rewards/event/${eventId}`, {
         headers: { Authorization: req.headers.authorization },
       }),
     );
