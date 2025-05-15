@@ -33,7 +33,7 @@ export class ProxyController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.USER)
+  @Roles(Role.USER, Role.ADMIN)
   @Post('/requests/:eventId')
   async requestReward(@Req() req, @Param('eventId') id: string, @Res() res) {
     const { data } = await firstValueFrom(
@@ -45,7 +45,7 @@ export class ProxyController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.USER, Role.ADMIN, Role.AUDITOR, Role.OPERATOR)
+  @Roles(Role.AUDITOR, Role.ADMIN)
   @Get('/requests')
   async getRequests(@Req() req, @Res() res) {
     const { data } = await firstValueFrom(
