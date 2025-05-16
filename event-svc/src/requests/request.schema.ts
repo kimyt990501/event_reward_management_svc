@@ -14,6 +14,12 @@ export class Request extends Document {
 
   @Prop()
   requestedAt: Date;
+
+  @Prop()
+  approvedAt?: Date;
+
+  @Prop()
+  rejectedAt?: Date;
 }
 
 export const RequestSchema = SchemaFactory.createForClass(Request);
