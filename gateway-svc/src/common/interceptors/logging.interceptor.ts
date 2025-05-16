@@ -20,8 +20,8 @@ export class LoggingInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const req = context.switchToHttp().getRequest();
 
-    const { method, originalUrl: url, user } = req;
-    const email = user?.email || 'anonymous';
+    const { method, originalUrl: url, user, body } = req;
+    const email = user?.email || body?.email || 'anonymous';
     const roles = user?.roles?.join(', ') || 'N/A';
 
     this.logger.log(`[HTTP] ${method} ${url} requested by user=${email}, roles=[${roles}]`, 'INFO');
