@@ -14,7 +14,7 @@ services:
     container_name: auth-svc
     restart: always
     env_file:
-      - ./auth-svc/.env
+      - .env
     ports:
       - "${AUTH_PORT:-3100}:3100"
     depends_on:
@@ -25,7 +25,7 @@ services:
     container_name: event-svc
     restart: always
     env_file:
-      - ./event-svc/.env
+      - .env
     ports:
       - "${EVENT_PORT:-3200}:3200"
     depends_on:
@@ -36,7 +36,7 @@ services:
     container_name: gateway-svc
     restart: always
     env_file:
-      - ./gateway-svc/.env
+      - .env
     ports:
       - "${GATEWAY_PORT:-3300}:3300"
     depends_on:
