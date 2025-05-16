@@ -6,6 +6,8 @@ import { ProxyController } from './proxy/proxy.controller';
 import { JwtStrategy } from './auth/jwt.strategy';
 import { WinstonModule } from 'nest-winston';
 import { winstonLoggerConfig } from './logger/logger.config';
+import { ResponseFormatInterceptor } from './common/interceptors/response-format.interceptor';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 @Module({
   imports: [
@@ -24,6 +26,6 @@ import { winstonLoggerConfig } from './logger/logger.config';
     }),
   ],
   controllers: [ProxyController],
-  providers: [JwtStrategy],
+  providers: [JwtStrategy, ResponseFormatInterceptor, HttpExceptionFilter,],
 })
 export class AppModule {}
