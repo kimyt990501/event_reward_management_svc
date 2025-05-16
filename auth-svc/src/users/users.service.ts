@@ -9,13 +9,23 @@ import { CreateUserDto } from './dto/create-user.dto';
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise< {message: string} > {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
     const user = new this.userModel({
       ...createUserDto,
       password: hashedPassword,
     });
-    return user.save();
+
+    await user.save();
+
+    if (createUserDto.invited_by) {
+      await this.userModel.updateOne(
+        { email: createUserDto.invited_by },
+        { $inc: { invite_cnt: 1 } },
+      );
+    }
+
+    return { message: '회원가입이 성공적으로 완료되었습니다.' };
   }
 
   async findByEmail(email: string): Promise<User | null> {
