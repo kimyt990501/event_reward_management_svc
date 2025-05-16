@@ -4,6 +4,8 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import { WinstonModule } from 'nest-winston';
+import { winstonLoggerConfig } from './logger/logger.config';
 import { Event, EventSchema } from './events/event.schema';
 import { Reward, RewardSchema } from './rewards/reward.schema';
 import { Request, RequestSchema } from './requests/request.schema';
@@ -18,6 +20,7 @@ import { JwtStrategy } from './auth/jwt.strategy';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    WinstonModule.forRoot(winstonLoggerConfig),
 
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
