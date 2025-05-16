@@ -23,9 +23,12 @@ export class ProxyController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.OPERATOR)
   @Post('/events')
+  /*
+   * 이벤트 등록
+  */
   async createEvent(@Req() req, @Body() body, @Res() res) {
     const { data } = await firstValueFrom(
-      this.httpService.post('http://event-svc:3200/events', body, {
+      this.httpService.post(`http://event-svc:3200/events`, body, {
         headers: { Authorization: req.headers.authorization },
       }),
     );
@@ -35,9 +38,12 @@ export class ProxyController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.OPERATOR)
   @Get('/events')
+  /*
+   * 이벤트 목록 조회
+  */
   async getEvents(@Req() req, @Res() res) {
     const { data } = await firstValueFrom(
-      this.httpService.get('http://event-svc:3200/events/summary', {
+      this.httpService.get(`http://event-svc:3200/events/summary`, {
         headers: { Authorization: req.headers.authorization },
       }),
     );
@@ -47,6 +53,9 @@ export class ProxyController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.OPERATOR)
   @Get('/events/:id')
+  /*
+   * 특정 이벤트 상세 조회
+  */
   async getEventDetail(@Req() req, @Param('id') id: string, @Res() res) {
     const { data } = await firstValueFrom(
       this.httpService.get(`http://event-svc:3200/events/detail/${id}`, {
@@ -59,6 +68,9 @@ export class ProxyController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.USER, Role.ADMIN)
   @Post('/requests/:eventId')
+  /*
+   * 특정 이벤트에 대해 보상 요청
+  */
   async requestReward(@Req() req, @Param('eventId') id: string, @Res() res) {
     const { data } = await firstValueFrom(
       this.httpService.post(`http://event-svc:3200/requests/${id}`, {}, {
@@ -71,9 +83,27 @@ export class ProxyController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.AUDITOR, Role.ADMIN, Role.OPERATOR)
   @Get('/requests')
+  /*
+   * 보상 요청 내역 확인
+  */
   async getRequests(@Req() req, @Res() res) {
     const { data } = await firstValueFrom(
-      this.httpService.get('http://event-svc:3200/requests', {
+      this.httpService.get(`http://event-svc:3200/requests`, {
+        headers: { Authorization: req.headers.authorization },
+      }),
+    );
+    return res.send(data);
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.OPERATOR)
+  @Post('/rewards')
+  /*
+  * 보상 등록
+  */
+  async createReward(@Req() req, @Body() body, @Res() res) {
+    const { data } = await firstValueFrom(
+      this.httpService.post(`http://event-svc:3200/rewards`, body, {
         headers: { Authorization: req.headers.authorization },
       }),
     );
@@ -83,9 +113,12 @@ export class ProxyController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.OPERATOR)
   @Get('/rewards')
+  /*
+   * 보상 조회
+  */
   async getAllRewards(@Req() req, @Res() res) {
     const { data } = await firstValueFrom(
-      this.httpService.get('http://event-svc:3200/rewards', {
+      this.httpService.get(`http://event-svc:3200/rewards`, {
         headers: { Authorization: req.headers.authorization },
       }),
     );
@@ -95,6 +128,9 @@ export class ProxyController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.OPERATOR)
   @Get('/rewards/event/:eventId')
+  /*
+   * 특정 이벤트에 대한 보상 조회
+  */
   async getRewardsByEvent(@Req() req, @Param('eventId') eventId: string, @Res() res) {
     const { data } = await firstValueFrom(
       this.httpService.get(`http://event-svc:3200/rewards/event/${eventId}`, {
