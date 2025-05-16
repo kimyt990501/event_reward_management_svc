@@ -3,11 +3,14 @@ import { HttpService } from '@nestjs/axios';
 import { InjectModel } from '@nestjs/mongoose';
 import { Event } from './event.schema';
 import { Model } from 'mongoose';
-import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/user.schema';
 
 @Injectable()
 export class EventsService {
-  constructor(@InjectModel(Event.name) private eventModel: Model<Event>, private readonly httpService: HttpService,) {}
+  constructor(
+    @InjectModel(Event.name) private eventModel: Model<Event>,
+    @InjectModel(User.name) private userModel: Model<User>,
+    private readonly httpService: HttpService,) {}
 
   create(data: any) {
     return this.eventModel.create(data);
@@ -62,17 +65,16 @@ export class EventsService {
     }
   }
 
-  async checkCondition(userId: string, condition: string): Promise<boolean> {
-    // 간단히 login_X_days 조건만 처리
-    if (condition.startsWith('login_')) {
-      const requiredDays = parseInt(condition.split('_')[1]);
-      const user = await this.getUserById(userId);
+  async checkCondition(userId: string, condition: string): Promise<null | boolean> {
+    const user = await this.userModel.findById(userId);
+    if (!user) return false;
 
-      if (!user) return false;
-      return user.loginDaysCount >= requiredDays;
+    if (condition.startsWith('invite_')) {
+      const required = parseInt(condition.split('_')[1]);
+      return user.invite_cnt >= required;
     }
 
-    // 다른 조건들은 필요에 따라 구현
-    return false;
+    // 아직 처리하지 않는 조건일 경우 null 반환
+    return null;
   }
 }
