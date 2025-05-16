@@ -47,13 +47,4 @@ export class RequestsService {
   async findById(id: string) {
     return this.requestModel.findById(id);
   }
-
-  async giveReward(userId: string, eventId: string) {
-    return this.rewardModel.create({
-      userId,
-      eventId,
-      givenAt: new Date(),
-      status: 'SUCCESS',
-    });
-  }
 }
