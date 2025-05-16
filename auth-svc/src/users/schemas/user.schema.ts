@@ -18,6 +18,12 @@ export class User extends Document {
 
   @Prop({ type: Number, default: 0 })
   loginDaysCount: number;
+
+  @Prop({ type: String, default: null })
+  invited_by?: string;
+
+  @Prop({ type: Number, default: 0 })
+  invite_cnt: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
