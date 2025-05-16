@@ -31,6 +31,46 @@ export class ProxyController {
     this.logger.info(`[ProxyController] [${method}] ${path} called by user ${user?.userId || 'UNKNOWN'} (Role=${user?.roles?.join(',') || 'N/A'})`);
   }
 
+  @UseGuards()
+  @Post('/login')
+  async login(@Body() body, @Res() res) {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.post(`http://auth-svc:3100/auth/login`, body),
+      );
+      return res.send(data); // JWT 포함 응답 그대로 전달
+    } catch (err) {
+      const status = err.response?.status || 500;
+      const errorResponse = err.response?.data || { message: 'Internal server error' };
+
+      return res.status(status).json({
+        statusCode: status,
+        message: errorResponse.message || 'Internal server error',
+        error: errorResponse.error || 'Internal Server Error',
+      });
+    }
+  }
+
+  @UseGuards()
+  @Post('/register')
+  async register(@Body() body, @Res() res) {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.post(`http://auth-svc:3100/auth/register`, body),
+      );
+      return res.send(data);
+    } catch (err) {
+      const status = err.response?.status || 500;
+      const errorResponse = err.response?.data || { message: 'Internal server error' };
+
+      return res.status(status).json({
+        statusCode: status,
+        message: errorResponse.message || 'Internal server error',
+        error: errorResponse.error || 'Internal Server Error',
+      });
+    }
+  }
+
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.OPERATOR)
   @Post('/events')
