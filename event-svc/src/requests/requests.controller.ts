@@ -60,8 +60,6 @@ export class RequestsController {
     request.approvedAt = new Date();
     await request.save();
 
-    await this.service.giveReward(request.userId, request.eventId.toString());
-
     return { message: '보상이 승인되었습니다.' };
   }
 
