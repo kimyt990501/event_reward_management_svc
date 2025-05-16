@@ -48,13 +48,15 @@
 ## 개발 및 실행 환경 설정
 
 ### 환경변수 (.env)
-각 서비스 루트에 `.env` 파일을 생성 후 다음 환경변수를 설정합니다.
+루트 디렉터리에 `.env` 파일을 생성 후 다음 환경변수를 설정합니다.
 
 ```env
-MONGO_URI=mongodb://mongo:27017/reward-db
-JWT_SECRET=your_jwt_secret_key
-JWT_EXPIRES_IN=3600s
-PORT=서비스별 포트 설정 (auth: 3100, event: 3200, gateway: 3300 등)
+AUTH_PORT=3100
+EVENT_PORT=3200
+GATEWAY_PORT=3300
+MONGO_URI=mongodb://mongo:27017/reward-management-db
+JWT_SECRET=secret
+JWT_EXPIRES_IN=1h
 ```
 
 ---
