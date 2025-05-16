@@ -330,4 +330,30 @@ export class ProxyController {
       });
     }
   }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.USER)
+  @Get('/requests/my')
+  /*
+  * 로그인한 유저의 보상 요청 내역 조회
+  */
+  async getMyRequests(@Req() req, @Res() res) {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.get(`http://event-svc:3200/requests/my`, {
+          headers: { Authorization: req.headers.authorization },
+        }),
+      );
+      return res.send(data);
+    } catch (err) {
+      const status = err.response?.status || 500;
+      const errorResponse = err.response?.data || { message: 'Internal server error' };
+
+      return res.status(status).json({
+        statusCode: status,
+        message: errorResponse.message || 'Internal server error',
+        error: errorResponse.error || 'Internal Server Error',
+      });
+    }
+  }
 }
