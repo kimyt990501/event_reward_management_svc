@@ -4,10 +4,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { ProxyController } from './proxy/proxy.controller';
 import { JwtStrategy } from './auth/jwt.strategy';
+import { WinstonModule } from 'nest-winston';
+import { winstonLoggerConfig } from './logger/logger.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+
+    WinstonModule.forRoot(winstonLoggerConfig),
 
     HttpModule,
 
