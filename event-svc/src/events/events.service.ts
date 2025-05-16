@@ -66,7 +66,7 @@ export class EventsService {
     // 간단히 login_X_days 조건만 처리
     if (condition.startsWith('login_')) {
       const requiredDays = parseInt(condition.split('_')[1]);
-      const user = await this.getUserById(userId); // auth-svc HTTP API 호출 또는 DB 직접 접근
+      const user = await this.getUserById(userId);
 
       if (!user) return false;
       return user.loginDaysCount >= requiredDays;
