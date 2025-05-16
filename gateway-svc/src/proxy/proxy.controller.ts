@@ -8,6 +8,8 @@ import {
   UseGuards,
   Param,
   Query,
+  Patch,
+  Inject
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -15,10 +17,19 @@ import { Roles } from '../auth/roles.decorator';
 import { Role } from '../common/roles.enum';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { Logger } from 'winston';
 
 @Controller()
 export class ProxyController {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(private readonly httpService: HttpService,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: Logger,
+  ) {}
+
+  private logRequest(method: string, path: string, user: any) {
+    this.logger.info(`[ProxyController] [${method}] ${path} called by user ${user?.userId || 'UNKNOWN'} (Role=${user?.roles?.join(',') || 'N/A'})`);
+  }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.OPERATOR)
@@ -212,6 +223,58 @@ export class ProxyController {
     try {
       const { data } = await firstValueFrom(
         this.httpService.get(`http://event-svc:3200/rewards/event/${eventId}`, {
+          headers: { Authorization: req.headers.authorization },
+        }),
+      );
+      return res.send(data);
+    } catch (err) {
+      const status = err.response?.status || 500;
+      const errorResponse = err.response?.data || { message: 'Internal server error' };
+
+      return res.status(status).json({
+        statusCode: status,
+        message: errorResponse.message || 'Internal server error',
+        error: errorResponse.error || 'Internal Server Error',
+      });
+    }
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Patch('/requests/approve/:id')
+  /*
+  * 보상 요청 승인 처리 (관리자용)
+  */
+  async approveRequest(@Req() req, @Param('id') id: string, @Res() res) {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.patch(`http://event-svc:3200/requests/approve/${id}`, {}, {
+          headers: { Authorization: req.headers.authorization },
+        }),
+      );
+      return res.send(data);
+    } catch (err) {
+      const status = err.response?.status || 500;
+      const errorResponse = err.response?.data || { message: 'Internal server error' };
+
+      return res.status(status).json({
+        statusCode: status,
+        message: errorResponse.message || 'Internal server error',
+        error: errorResponse.error || 'Internal Server Error',
+      });
+    }
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
+  @Patch('/requests/reject/:id')
+  /*
+  * 보상 요청 거부 처리 (관리자용)
+  */
+  async rejectRequest(@Req() req, @Param('id') id: string, @Res() res) {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.patch(`http://event-svc:3200/requests/reject/${id}`, {}, {
           headers: { Authorization: req.headers.authorization },
         }),
       );
