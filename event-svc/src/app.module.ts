@@ -9,6 +9,7 @@ import { winstonLoggerConfig } from './logger/logger.config';
 import { Event, EventSchema } from './events/event.schema';
 import { Reward, RewardSchema } from './rewards/reward.schema';
 import { Request, RequestSchema } from './requests/request.schema';
+import { User, UserSchema } from './users/user.schema';
 import { EventsService } from './events/events.service';
 import { RewardsService } from './rewards/rewards.service';
 import { RequestsService } from './requests/requests.service';
@@ -43,6 +44,7 @@ import { JwtStrategy } from './auth/jwt.strategy';
       { name: Event.name, schema: EventSchema },
       { name: Reward.name, schema: RewardSchema },
       { name: Request.name, schema: RequestSchema },
+      { name: User.name, schema: UserSchema },
     ]),
 
     PassportModule,
