@@ -14,6 +14,6 @@ async function bootstrap() {
   const logger = app.get<Logger>(WINSTON_MODULE_NEST_PROVIDER);
   app.useGlobalInterceptors(new LoggingInterceptor(logger));
   const config = app.get(ConfigService);
-  await app.listen(config.get('PORT') || 3300);
+  await app.listen(config.get('GATEWAY_PORT') || 3300);
 }
 bootstrap();

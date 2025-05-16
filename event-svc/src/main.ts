@@ -9,7 +9,7 @@ async function bootstrap() {
     logger: WinstonModule.createLogger(winstonLoggerConfig),
   });
   const config = app.get(ConfigService);
-  const port = config.get<number>('PORT') || 3200;
+  const port = config.get<number>('EVENT_PORT') || 3200;
   await app.listen(port);
 }
 bootstrap();

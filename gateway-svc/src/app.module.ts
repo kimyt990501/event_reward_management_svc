@@ -9,7 +9,7 @@ import { winstonLoggerConfig } from './logger/logger.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, ignoreEnvFile: true, }),
 
     WinstonModule.forRoot(winstonLoggerConfig),
 

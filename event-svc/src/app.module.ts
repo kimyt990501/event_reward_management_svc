@@ -19,7 +19,7 @@ import { JwtStrategy } from './auth/jwt.strategy';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, ignoreEnvFile: true, }),
     WinstonModule.forRoot(winstonLoggerConfig),
 
     MongooseModule.forRootAsync({
