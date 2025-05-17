@@ -258,7 +258,7 @@
     {
       "id": "requestId",
       "eventId": "eventId",
-      "status": "APPROVED"
+      "status": "SUCCESS"
     }
   ]
 }
