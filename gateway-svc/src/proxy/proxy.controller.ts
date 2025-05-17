@@ -17,7 +17,7 @@ import { Role } from '../common/roles.enum';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 
-@Controller()
+@Controller('api')
 export class ProxyController {
   constructor(private readonly httpService: HttpService,) {}
 
