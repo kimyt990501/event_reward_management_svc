@@ -59,7 +59,12 @@ GATEWAY_PORT=3300
 AUTH_SVC_URL=http://auth-svc:3100
 EVENT_SVC_URL=http://event-svc:3200
 
-MONGO_URI=mongodb://mongo:27017/reward-management-db
+MONGO_USERNAME=nexon
+MONGO_PASSWORD=nexon1234
+MONGO_DB=reward-management-db
+MONGO_PORT=27017
+
+MONGO_URI=mongodb://nexon:nexon1234@mongo:27017/reward-management-db?authSource=admin
 JWT_SECRET=secret
 JWT_EXPIRES_IN=1h
 ```
@@ -67,6 +72,7 @@ JWT_EXPIRES_IN=1h
 - .env.test
 ```env
 NODE_ENV=test
+
 AUTH_PORT=3100
 EVENT_PORT=3200
 GATEWAY_PORT=3300
@@ -74,7 +80,12 @@ GATEWAY_PORT=3300
 AUTH_SVC_URL=http://auth-svc:3100
 EVENT_SVC_URL=http://event-svc:3200
 
-MONGO_URI=mongodb://mongo:27017/reward-management-db-test
+MONGO_USERNAME=nexon
+MONGO_PASSWORD=nexon1234
+MONGO_DB=reward-management-db-test
+MONGO_PORT=27017
+
+MONGO_URI=mongodb://nexon:nexon1234@mongo:27017/reward-management-db-test?authSource=admin
 JWT_SECRET=secret
 JWT_EXPIRES_IN=1h
 ```
