@@ -55,6 +55,10 @@
 AUTH_PORT=3100
 EVENT_PORT=3200
 GATEWAY_PORT=3300
+
+AUTH_SVC_URL=http://auth-svc:3100
+EVENT_SVC_URL=http://event-svc:3200
+
 MONGO_URI=mongodb://mongo:27017/reward-management-db
 JWT_SECRET=secret
 JWT_EXPIRES_IN=1h
@@ -66,6 +70,10 @@ NODE_ENV=test
 AUTH_PORT=3100
 EVENT_PORT=3200
 GATEWAY_PORT=3300
+
+AUTH_SVC_URL=http://auth-svc:3100
+EVENT_SVC_URL=http://event-svc:3200
+
 MONGO_URI=mongodb://mongo:27017/reward-management-db-test
 JWT_SECRET=secret
 JWT_EXPIRES_IN=1h
