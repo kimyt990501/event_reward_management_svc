@@ -17,6 +17,9 @@ import { Role } from '../common/roles.enum';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 
+const AUTH_SVC_URL = process.env.AUTH_SVC_URL;
+const EVENT_SVC_URL = process.env.EVENT_SVC_URL;
+
 @Controller('api')
 export class ProxyController {
   constructor(private readonly httpService: HttpService,) {}
@@ -26,7 +29,7 @@ export class ProxyController {
   async login(@Body() body) {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.post(`http://auth-svc:3100/auth/login`, body),
+        this.httpService.post(`${AUTH_SVC_URL}/auth/login`, body),
       );
       return data;
     } catch (err) {
@@ -45,7 +48,7 @@ export class ProxyController {
   async register(@Body() body) {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.post(`http://auth-svc:3100/auth/register`, body),
+        this.httpService.post(`${AUTH_SVC_URL}/auth/register`, body),
       );
       return data;
     } catch (err) {
@@ -68,7 +71,7 @@ export class ProxyController {
   async createEvent(@Req() req, @Body() body) {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.post(`http://event-svc:3200/events`, body, {
+        this.httpService.post(`${EVENT_SVC_URL}/events`, body, {
           headers: { Authorization: req.headers.authorization },
         }),
       );
@@ -93,7 +96,7 @@ export class ProxyController {
   async getEvents(@Req() req) {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get(`http://event-svc:3200/events/summary`, {
+        this.httpService.get(`${EVENT_SVC_URL}/events/summary`, {
           headers: { Authorization: req.headers.authorization },
         }),
       );
@@ -118,7 +121,7 @@ export class ProxyController {
   async getEventDetail(@Req() req, @Param('id') id: string) {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get(`http://event-svc:3200/events/detail/${id}`, {
+        this.httpService.get(`${EVENT_SVC_URL}/events/detail/${id}`, {
           headers: { Authorization: req.headers.authorization },
         }),
       );
@@ -143,7 +146,7 @@ export class ProxyController {
   async requestReward(@Req() req, @Param('eventId') id: string) {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.post(`http://event-svc:3200/requests/${id}`, {}, {
+        this.httpService.post(`${EVENT_SVC_URL}/requests/${id}`, {}, {
           headers: { Authorization: req.headers.authorization },
         }),
       );
@@ -168,7 +171,7 @@ export class ProxyController {
   async getRequests(@Req() req) {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get(`http://event-svc:3200/requests`, {
+        this.httpService.get(`${EVENT_SVC_URL}/requests`, {
           headers: { Authorization: req.headers.authorization },
         }),
       );
@@ -193,7 +196,7 @@ export class ProxyController {
   async createReward(@Req() req, @Body() body) {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.post(`http://event-svc:3200/rewards`, body, {
+        this.httpService.post(`${EVENT_SVC_URL}/rewards`, body, {
           headers: { Authorization: req.headers.authorization },
         }),
       );
@@ -218,7 +221,7 @@ export class ProxyController {
   async getAllRewards(@Req() req) {
   try {
       const { data } = await firstValueFrom(
-        this.httpService.get(`http://event-svc:3200/rewards`, {
+        this.httpService.get(`${EVENT_SVC_URL}/rewards`, {
           headers: { Authorization: req.headers.authorization },
         }),
       );
@@ -243,7 +246,7 @@ export class ProxyController {
   async getRewardsByEvent(@Req() req, @Param('eventId') eventId: string) {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get(`http://event-svc:3200/rewards/event/${eventId}`, {
+        this.httpService.get(`${EVENT_SVC_URL}/rewards/event/${eventId}`, {
           headers: { Authorization: req.headers.authorization },
         }),
       );
@@ -268,7 +271,7 @@ export class ProxyController {
   async approveRequest(@Req() req, @Param('id') id: string) {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.patch(`http://event-svc:3200/requests/approve/${id}`, {}, {
+        this.httpService.patch(`${EVENT_SVC_URL}/requests/approve/${id}`, {}, {
           headers: { Authorization: req.headers.authorization },
         }),
       );
@@ -293,7 +296,7 @@ export class ProxyController {
   async rejectRequest(@Req() req, @Param('id') id: string) {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.patch(`http://event-svc:3200/requests/reject/${id}`, {}, {
+        this.httpService.patch(`${EVENT_SVC_URL}/requests/reject/${id}`, {}, {
           headers: { Authorization: req.headers.authorization },
         }),
       );
@@ -318,7 +321,7 @@ export class ProxyController {
   async getMyRequests(@Req() req) {
     try {
       const { data } = await firstValueFrom(
-        this.httpService.get(`http://event-svc:3200/requests/my`, {
+        this.httpService.get(`${EVENT_SVC_URL}/requests/my`, {
           headers: { Authorization: req.headers.authorization },
         }),
       );
