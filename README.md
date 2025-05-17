@@ -47,14 +47,26 @@
 
 ## 개발 및 실행 환경 설정
 
-### 환경변수 (.env)
-루트 디렉터리에 `.env` 파일을 생성 후 다음 환경변수를 설정합니다.
+### 환경변수 (.env, .env.test)
+루트 디렉터리에 `.env`, `.env.test` 파일을 생성 후 다음 환경변수를 설정합니다.
 
+- .env
 ```env
 AUTH_PORT=3100
 EVENT_PORT=3200
 GATEWAY_PORT=3300
 MONGO_URI=mongodb://mongo:27017/reward-management-db
+JWT_SECRET=secret
+JWT_EXPIRES_IN=1h
+```
+
+- .env.test
+```env
+NODE_ENV=test
+AUTH_PORT=3100
+EVENT_PORT=3200
+GATEWAY_PORT=3300
+MONGO_URI=mongodb://mongo:27017/reward-management-db-test
 JWT_SECRET=secret
 JWT_EXPIRES_IN=1h
 ```
@@ -81,7 +93,7 @@ docker-compose up -d --build
 
 ---
 
-## 테스트 코드
+## 도커 테스트 코드
 
 - 각 서비스별 단위 테스트 및 통합 테스트 포함
 - Jest 사용
@@ -91,6 +103,19 @@ docker-compose up -d --build
   - RequestsService : 보상 요청 시나리오 및 중복 방지 검증
   - RewardsService : 보상 등록 및 조회 테스트
   - ProxyController : API 프록시 정상 동작 테스트
+
+## 도커 환경 테스트 실행 방법
+
+```bash
+docker compose -f docker-compose.test.yml up -d --build
+docker exec -it gateway-svc-test sh
+npm run test:e2e
+```
+
+- 테스트 다시 실행 할 시 아래 코드 실행하여 테스트 DB 데이터 초기화 후 위 코드 다시 실행
+```bash
+docker compose -f docker-compose.test.yml down -v
+```
 
 ---
 
