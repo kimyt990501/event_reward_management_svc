@@ -43,6 +43,11 @@
   - `POST /requests/:eventId` (유저 권한)
   - `GET /requests` (역할별 조회 가능)
 
+### API 명세서
+전체 API 설명은 아래 문서를 참고해주세요:
+
+[API 명세서 보러가기](./API.md)
+
 ---
 
 ## 개발 및 실행 환경 설정
