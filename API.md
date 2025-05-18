@@ -80,14 +80,7 @@
 {
   "code": "SUCCESS",
   "data": {
-    "title": "주간 로그인 이벤트2",
-    "description": "이번 주 내내 로그인한 유저에게 쿠폰을 드립니다.",
-    "condition": "weekly_login",
-    "active": true,
-    "startAt": "2025-05-12T00:00:00.000Z",
-    "endAt": "2025-05-18T23:59:59.000Z",
-    "_id": "68299faa423c30c416d8ee69",
-    "__v": 0
+    "message": "이벤트가 등록되었습니다."
   }
 }
 ```
@@ -156,12 +149,7 @@
 {
   "code": "SUCCESS",
   "data": {
-    "name": "주간 로그인 쿠폰2",
-    "type": "coupon",
-    "quantity": 1,
-    "eventId": "68299faa423c30c416d8ee69",
-    "_id": "6829a01d423c30c416d8ee6d",
-    "__v": 0
+    "message": "보상이 등록되었습니다."
   }
 }
 ```
