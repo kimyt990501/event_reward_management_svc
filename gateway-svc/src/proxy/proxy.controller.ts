@@ -8,7 +8,8 @@ import {
   UseGuards,
   Param,
   Patch,
-  HttpException
+  HttpException,
+  Delete
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -72,6 +73,31 @@ export class ProxyController {
     try {
       const { data } = await firstValueFrom(
         this.httpService.post(`${EVENT_SVC_URL}/events`, body, {
+          headers: { Authorization: req.headers.authorization },
+        }),
+      );
+      return data;
+    } catch (err) {
+      const status = err.response?.status || 500;
+      const errorResponse = err.response?.data || { message: 'Internal server error' };
+
+      throw new HttpException({
+        message: errorResponse.message || 'Internal server error',
+        error: errorResponse.error || 'Internal Server Error',
+      }, status);
+    }
+  }
+
+  @Delete('/events/:eventId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.OPERATOR)
+  /*
+  * 이벤트 삭제
+  */
+  async deleteEvent(@Req() req, @Param('eventId') eventId: string) {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.delete(`${EVENT_SVC_URL}/events/${eventId}`, {
           headers: { Authorization: req.headers.authorization },
         }),
       );
@@ -236,6 +262,32 @@ export class ProxyController {
       }, status);
     }
   }
+
+  @Delete('/rewards/:rewardId')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN, Role.OPERATOR)
+  /*
+  * 보상 삭제
+  */
+  async deleteReward(@Req() req, @Param('rewardId') rewardId: string) {
+    try {
+      const { data } = await firstValueFrom(
+        this.httpService.delete(`${EVENT_SVC_URL}/rewards/${rewardId}`, {
+          headers: { Authorization: req.headers.authorization },
+        }),
+      );
+      return data;
+    } catch (err) {
+      const status = err.response?.status || 500;
+      const errorResponse = err.response?.data || { message: 'Internal server error' };
+
+      throw new HttpException({
+        message: errorResponse.message || 'Internal server error',
+        error: errorResponse.error || 'Internal Server Error',
+      }, status);
+    }
+  }
+
 
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN, Role.OPERATOR)
