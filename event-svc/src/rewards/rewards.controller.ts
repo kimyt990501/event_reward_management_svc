@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Get, Param } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Param, Delete } from '@nestjs/common';
 import { RewardsService } from './rewards.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -26,5 +26,11 @@ export class RewardsController {
   @Roles(Role.ADMIN, Role.OPERATOR)
   async findByEvent(@Param('eventId') eventId: string) {
     return this.service.findByEvent(eventId);
+  }
+
+  @Delete(':rewardId')
+  @Roles(Role.ADMIN, Role.OPERATOR)
+  async deleteReward(@Param('rewardId') rewardId: string) {
+    return this.service.deleteById(rewardId);
   }
 }
