@@ -87,6 +87,23 @@
 
 ---
 
+### [DELETE] /api/events/:eventId
+- **설명**: 이벤트 삭제
+- **권한**: `ADMIN`, `OPERATOR`  
+
+- **성공 응답**:
+```json
+{
+  "code": "SUCCESS",
+  "data": {
+    "message": "이벤트와 연결된 보상이 함께 삭제되었습니다."
+  }
+}
+```
+
+---
+
+
 ### [GET] /api/events  
 - **설명**: 이벤트 목록 조회
 - **권한**: `ADMIN`, `OPERATOR`  
@@ -173,6 +190,22 @@
       "__v": 0
     }
   ]
+}
+```
+
+---
+
+### [DELETE] /api/rewards/rewardId  
+- **설명**: 보상 삭제
+- **권한**: `ADMIN`, `OPERATOR`  
+
+- **성공 응답**:
+```json
+{
+  "code": "SUCCESS",
+  "data": {
+    "message": "보상이 삭제되었습니다."
+  }
 }
 ```
 
