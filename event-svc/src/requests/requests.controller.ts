@@ -28,13 +28,13 @@ export class RequestsController {
   @Post(':eventId')
   @Roles(Role.USER)
   async request(@Param('eventId') id: string, @Req() req) {
-    return this.service.requestReward(req.user?.userId, id);
+    return this.service.requestReward(req.user?.email, req.user?.userId, id);
   }
 
   @Get('my')
   @Roles(Role.USER)
   async my(@Req() req) {
-    return this.service.findByUser(req.user.userId);
+    return this.service.findByUser(req.user.email);
   }
 
   @Get()
