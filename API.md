@@ -21,7 +21,7 @@
 {
   "code": "SUCCESS",
   "data": {
-    "message": "User registered successfully"
+      "message": "회원가입이 성공적으로 완료되었습니다."
   }
 }
 ```
@@ -80,8 +80,14 @@
 {
   "code": "SUCCESS",
   "data": {
-    "id": "eventId",
-    "message": "Event created"
+    "title": "주간 로그인 이벤트2",
+    "description": "이번 주 내내 로그인한 유저에게 쿠폰을 드립니다.",
+    "condition": "weekly_login",
+    "active": true,
+    "startAt": "2025-05-12T00:00:00.000Z",
+    "endAt": "2025-05-18T23:59:59.000Z",
+    "_id": "68299faa423c30c416d8ee69",
+    "__v": 0
   }
 }
 ```
@@ -97,9 +103,9 @@
   "code": "SUCCESS",
   "data": [
     {
-      "id": "eventId",
+      "_id": "68299faa423c30c416d8ee69",
       "title": "주간 로그인 이벤트1",
-      "description": "설명",
+      "active": true,
       "startAt": "2025-05-12T00:00:00.000Z",
       "endAt": "2025-05-18T23:59:59.000Z"
     }
@@ -117,9 +123,9 @@
 {
   "code": "SUCCESS",
   "data": {
-    "id": "eventId",
+    "_id": "68299faa423c30c416d8ee69",
     "title": "주간 로그인 이벤트1",
-    "description": "설명",
+    "description": "이번 주 내내 로그인한 유저에게 쿠폰을 드립니다.",
     "condition": "weekly_login",
     "active": true,
     "startAt": "2025-05-12T00:00:00.000Z",
@@ -138,10 +144,10 @@
 - **요청 바디**:
 ```json
 {
-  "name": "주간 로그인 쿠폰1",
+  "name": "주간 로그인 쿠폰2",
   "type": "coupon",
   "quantity": 1,
-  "eventId": "eventId"
+  "eventId": "68299faa423c30c416d8ee69"
 }
 ```
 
@@ -150,8 +156,12 @@
 {
   "code": "SUCCESS",
   "data": {
-    "id": "rewardId",
-    "message": "Reward created"
+    "name": "주간 로그인 쿠폰2",
+    "type": "coupon",
+    "quantity": 1,
+    "eventId": "68299faa423c30c416d8ee69",
+    "_id": "6829a01d423c30c416d8ee6d",
+    "__v": 0
   }
 }
 ```
@@ -167,11 +177,12 @@
   "code": "SUCCESS",
   "data": [
     {
-      "id": "rewardId",
-      "name": "주간 로그인 쿠폰1",
+      "_id": "6829a01d423c30c416d8ee6d",
+      "name": "주간 로그인 쿠폰2",
       "type": "coupon",
       "quantity": 1,
-      "eventId": "eventId"
+      "eventId": "68299faa423c30c416d8ee69",
+      "__v": 0
     }
   ]
 }
@@ -190,10 +201,12 @@
   "code": "SUCCESS",
   "data": [
     {
-      "id": "requestId",
-      "eventId": "eventId",
-      "userId": "userId",
-      "status": "PENDING"
+      "_id": "6829a0b6423c30c416d8ee74",
+      "userId": "682863fc04fc6d6693a1f1f9",
+      "eventId": "68299faa423c30c416d8ee69",
+      "status": "PENDING",
+      "requestedAt": "2025-05-18T08:56:22.842Z",
+      "__v": 0
     }
   ]
 }
@@ -207,11 +220,11 @@
 - **성공 응답**:
 ```json
 {
-  "code": "SUCCESS",
-  "data": {
-    "id": "requestId",
-    "message": "Reward request submitted"
-  }
+    "code": "SUCCESS",
+    "data": {
+        "message": "보상 요청이 등록되었습니다.",
+        "status": "PENDING"
+    }
 }
 ```
 
@@ -225,7 +238,7 @@
 {
   "code": "SUCCESS",
   "data": {
-    "message": "Request approved"
+    "message": "보상이 승인되었습니다."
   }
 }
 ```
@@ -240,7 +253,7 @@
 {
   "code": "SUCCESS",
   "data": {
-    "message": "Request rejected"
+    "message": "보상이 거절되었습니다."
   }
 }
 ```
@@ -256,9 +269,13 @@
   "code": "SUCCESS",
   "data": [
     {
-      "id": "requestId",
-      "eventId": "eventId",
-      "status": "SUCCESS"
+      "_id": "6829a0b6423c30c416d8ee74",
+      "userId": "682863fc04fc6d6693a1f1f9",
+      "eventId": "68299faa423c30c416d8ee69",
+      "status": "SUCCESS",
+      "requestedAt": "2025-05-18T08:56:22.842Z",
+      "__v": 0,
+      "approvedAt": "2025-05-18T08:57:19.615Z"
     }
   ]
 }
