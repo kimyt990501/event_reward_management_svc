@@ -12,8 +12,12 @@ export class EventsService {
     @InjectModel(User.name) private userModel: Model<User>,
     private readonly httpService: HttpService,) {}
 
-  create(data: any) {
-    return this.eventModel.create(data);
+  async create(data: any) {
+    await this.eventModel.create(data);
+
+    return {
+      message: '이벤트가 등록되었습니다.',
+    };
   }
 
   findAll() {
