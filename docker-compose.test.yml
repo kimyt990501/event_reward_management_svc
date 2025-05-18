@@ -6,6 +6,10 @@ services:
     restart: always
     ports:
       - "27017:27017" # 테스트 전용 포트
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
     volumes:
       - mongo-data-test:/data/db
 
