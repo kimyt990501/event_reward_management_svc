@@ -7,8 +7,12 @@ import { Model } from 'mongoose';
 export class RewardsService {
   constructor(@InjectModel(Reward.name) private rewardModel: Model<Reward>) {}
 
-  create(data: any) {
-    return this.rewardModel.create(data);
+  async create(data: any) {
+    await this.rewardModel.create(data);
+
+    return {
+      message: '보상이 등록되었습니다.',
+    };
   }
 
   findByEvent(eventId: string) {
