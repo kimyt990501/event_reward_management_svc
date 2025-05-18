@@ -1,16 +1,18 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { InjectModel } from '@nestjs/mongoose';
 import { Event } from './event.schema';
 import { Model } from 'mongoose';
 import { User } from 'src/users/user.schema';
+import { RewardsService } from 'src/rewards/rewards.service';
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectModel(Event.name) private eventModel: Model<Event>,
     @InjectModel(User.name) private userModel: Model<User>,
-    private readonly httpService: HttpService,) {}
+    private readonly httpService: HttpService,
+    private readonly rewardsService: RewardsService) {}
 
   async create(data: any) {
     await this.eventModel.create(data);
@@ -26,6 +28,20 @@ export class EventsService {
 
   findById(id: string) {
     return this.eventModel.findById(id);
+  }
+
+  async deleteById(eventId: string) {
+    const eventResult = await this.eventModel.deleteOne({ _id: eventId });
+  
+    if (eventResult.deletedCount === 0) {
+      throw new NotFoundException('이벤트가 존재하지 않거나 이미 삭제되었습니다.');
+    }
+
+    await this.rewardsService.deleteByEventId(eventId);
+  
+    return {
+      message: `이벤트와 연결된 보상이 함께 삭제되었습니다.`,
+    };
   }
 
   async findAllSummary() {
