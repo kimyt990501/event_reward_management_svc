@@ -69,9 +69,16 @@ export class EventsService {
     const user = await this.userModel.findById(userId);
     if (!user) return false;
 
+    // 친구 초대 이벤트 조건 확인
     if (condition.startsWith('invite_')) {
       const required = parseInt(condition.split('_')[1]);
       return user.invite_cnt >= required;
+    }
+
+    // 연속 로그인 이벤트 조건 확인
+    if (condition.startsWith('login_')) {
+      const required = parseInt(condition.split('_')[1]);
+      return user.loginDaysCount >= required;
     }
 
     // 아직 처리하지 않는 조건일 경우 null 반환
