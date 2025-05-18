@@ -11,8 +11,8 @@ describe('Gateway E2E (e2e)', () => {
 
   const users = [
     {
-      email: 'user5@example.com',
-      password: 'password5',
+      email: 'user1@example.com',
+      password: 'password1',
       roles: ['USER'],
     },
     {
@@ -32,6 +32,27 @@ describe('Gateway E2E (e2e)', () => {
     },
   ];
 
+  const invited_users = [
+    {
+      email: 'user2@example.com',
+      password: 'password2',
+      roles: ['USER'],
+      invited_by: 'user1@example.com'
+    },
+    {
+      email: 'user3@example.com',
+      password: 'password3',
+      roles: ['USER'],
+      invited_by: 'user1@example.com'
+    },
+    {
+      email: 'user4@example.com',
+      password: 'password4',
+      roles: ['USER'],
+      invited_by: 'user1@example.com'
+    },
+  ];
+
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
       imports: [AppModule],
@@ -45,7 +66,7 @@ describe('Gateway E2E (e2e)', () => {
   it('회원가입', async () => {
     for (const user of users) {
       await request(app.getHttpServer())
-        .post('/register')
+        .post('/api/register')
         .send(user)
         .expect(201);
     }
@@ -54,7 +75,7 @@ describe('Gateway E2E (e2e)', () => {
   it('로그인 & 토큰 저장', async () => {
     for (const user of users) {
       const res = await request(app.getHttpServer())
-        .post('/login')
+        .post('/api/login')
         .send({ email: user.email, password: user.password })
         .expect(201);
 
@@ -64,27 +85,36 @@ describe('Gateway E2E (e2e)', () => {
 
   it('ADMIN 또는 OPERATOR만 이벤트 생성 가능', async () => {
     const eventPayload = {
-      title: '주간 로그인 이벤트1',
-      description: '이번 주 내내 로그인한 유저에게 쿠폰을 드립니다.',
-      condition: 'weekly_login',
+      title: "친구 3명 초대 이벤트",
+      description: "친구 3명을 초대하면 보상을 드립니다.",
+      condition: "invite_3_friends",
       active: true,
-      startAt: '2025-05-12T00:00:00.000Z',
-      endAt: '2025-05-18T23:59:59.000Z',
+      startAt: "2025-05-10T00:00:00.000Z",
+      endAt: "2025-07-10T00:00:00.000Z"
     };
 
     // ADMIN 생성
-    const res = await request(app.getHttpServer())
-      .post('/events')
+    await request(app.getHttpServer())
+      .post('/api/events')
       .set('Authorization', `Bearer ${tokens['ADMIN']}`)
       .send(eventPayload)
       .expect(201);
+    
+    const res = await request(app.getHttpServer())
+      .get('/api/events')
+      .set('Authorization', `Bearer ${tokens['ADMIN']}`)
+      .expect(200);
 
-    createdEventId = res.body.id || res.body._id; // 실제 필드 확인 필요
+    const events = res.body?.data || res.body;
+    expect(Array.isArray(events)).toBe(true);
+    expect(events.length).toBeGreaterThan(0);
+
+    createdEventId = events[0]._id;
     expect(createdEventId).toBeDefined();
 
     // USER → 실패
     await request(app.getHttpServer())
-      .post('/events')
+      .post('/api/events')
       .set('Authorization', `Bearer ${tokens['USER']}`)
       .send(eventPayload)
       .expect(403);
@@ -92,30 +122,37 @@ describe('Gateway E2E (e2e)', () => {
 
   it('REWARD 생성 - ADMIN 또는 OPERATOR', async () => {
     const rewardPayload = {
-      name: '주간 로그인 쿠폰1',
-      type: 'coupon',
+      name: "친구 3명 초대 쿠폰",
+      type: "coupon",
       quantity: 1,
       eventId: createdEventId,
     };
 
     await request(app.getHttpServer())
-      .post('/rewards')
+      .post('/api/rewards')
       .set('Authorization', `Bearer ${tokens['ADMIN']}`)
       .send(rewardPayload)
       .expect(201);
   });
 
-  it('요청 생성 - USER만 가능', async () => {
+  it('사용자 초대 후 보상 요청 테스트', async () => {
+    // 한 사용자의 아이디를 초대 아이디에 넣어서 총 세명 회원가입 실시
+    for (const user of invited_users) {
+      await request(app.getHttpServer())
+        .post('/api/register')
+        .send(user)
+        .expect(201);
+    }
     await request(app.getHttpServer())
-      .post(`/requests/${createdEventId}`)
+      .post(`/api/requests/${createdEventId}`)
       .set('Authorization', `Bearer ${tokens['USER']}`)
       .expect(201);
-
+    
     // 2. 내 요청 목록 조회해서 최근 요청 ID 추출
     const res = await request(app.getHttpServer())
-      .get('/requests/my')
-      .set('Authorization', `Bearer ${tokens['USER']}`)
-      .expect(200);
+    .get('/api/requests/my')
+    .set('Authorization', `Bearer ${tokens['USER']}`)
+    .expect(200);
 
     const myRequests = res.body?.data || res.body;
     expect(Array.isArray(myRequests)).toBe(true);
@@ -125,16 +162,81 @@ describe('Gateway E2E (e2e)', () => {
     expect(createdRequestId).toBeDefined();
   });
 
+  it('기존 이벤트 삭제 후 새로운 이벤트 및 보상 등록 후 승인/거절 테스트 - ADMIN만 가능', async () => {
+    // 이벤트 삭제
+    await request(app.getHttpServer())
+      .delete(`/api/events/${createdEventId}`)
+      .set('Authorization', `Bearer ${tokens['ADMIN']}`)
+      .expect(200);
+
+    const eventPayload = {
+      title: "test",
+      description: "test",
+      condition: "test",
+      active: true,
+      startAt: "2025-05-10T00:00:00.000Z",
+      endAt: "2025-07-10T00:00:00.000Z"
+    };
+
+    await request(app.getHttpServer())
+      .post('/api/events')
+      .set('Authorization', `Bearer ${tokens['ADMIN']}`)
+      .send(eventPayload)
+      .expect(201);
+    
+    const res = await request(app.getHttpServer())
+      .get('/api/events')
+      .set('Authorization', `Bearer ${tokens['ADMIN']}`)
+      .expect(200);
+
+    const events = res.body?.data || res.body;
+    expect(Array.isArray(events)).toBe(true);
+    expect(events.length).toBeGreaterThan(0);
+
+    createdEventId = events[0]._id;
+
+    const rewardPayload = {
+      name: "test",
+      type: "coupon",
+      quantity: 1,
+      eventId: createdEventId,
+    };
+
+    await request(app.getHttpServer())
+      .post('/api/rewards')
+      .set('Authorization', `Bearer ${tokens['ADMIN']}`)
+      .send(rewardPayload)
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .post(`/api/requests/${createdEventId}`)
+      .set('Authorization', `Bearer ${tokens['USER']}`)
+      .expect(201);
+    
+    // 내 요청 목록 조회해서 최근 요청 ID 추출
+    const myRes = await request(app.getHttpServer())
+    .get('/api/requests/my')
+    .set('Authorization', `Bearer ${tokens['USER']}`)
+    .expect(200);
+
+    const myRequests = myRes.body?.data || myRes.body;
+    expect(Array.isArray(myRequests)).toBe(true);
+    expect(myRequests.length).toBeGreaterThan(0);
+
+    createdRequestId = myRequests[1]._id;
+    expect(createdRequestId).toBeDefined();
+  } )
+
   it('승인/거절 - ADMIN만 가능', async () => {
     // 승인
     await request(app.getHttpServer())
-      .patch(`/requests/approve/${createdRequestId}`)
+      .patch(`/api/requests/approve/${createdRequestId}`)
       .set('Authorization', `Bearer ${tokens['ADMIN']}`)
       .expect(200);
 
     // 거절
     await request(app.getHttpServer())
-      .patch(`/requests/reject/${createdRequestId}`)
+      .patch(`/api/requests/reject/${createdRequestId}`)
       .set('Authorization', `Bearer ${tokens['ADMIN']}`)
       .expect(200);
   });
