@@ -83,7 +83,7 @@ describe('Gateway E2E (e2e)', () => {
     }
   });
 
-  it('이벤트 생성 테스트 - ADMIN, OPERATOR]', async () => {
+  it('이벤트 생성 테스트 - ADMIN, OPERATOR', async () => {
     const eventPayload = {
       title: "친구 3명 초대 이벤트",
       description: "친구 3명을 초대하면 보상을 드립니다.",
