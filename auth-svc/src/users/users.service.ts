@@ -18,9 +18,9 @@ export class UsersService {
 
     await user.save();
 
-    if (createUserDto.invited_by) {
+    if (createUserDto.invitedBy) {
       await this.userModel.updateOne(
-        { email: createUserDto.invited_by },
+        { email: createUserDto.invitedBy },
         { $inc: { invite_cnt: 1 } },
       );
     }

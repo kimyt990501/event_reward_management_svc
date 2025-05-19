@@ -20,10 +20,10 @@ export class User extends Document {
   loginDaysCount: number;
 
   @Prop({ type: String, default: null })
-  invited_by?: string;
+  invitedBy?: string;
 
   @Prop({ type: Number, default: 0 })
-  invite_cnt: number;
+  inviteCnt: number;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

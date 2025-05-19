@@ -92,7 +92,7 @@ export class EventsService {
     // 친구 초대 이벤트 조건 확인
     if (condition.startsWith('invite_')) {
       const required = parseInt(condition.split('_')[1]);
-      return user.invite_cnt >= required;
+      return user.inviteCnt >= required;
     }
 
     // 연속 로그인 이벤트 조건 확인
