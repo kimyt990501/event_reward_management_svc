@@ -24,6 +24,8 @@
 
 ## 주요 기능 및 API
 
+- 기본적으로 모든 api 에 대해서 prefix 로 <code>/api</code> 적용
+
 ### Auth Service (auth-svc)
 - 유저 등록, 로그인
 - 역할(Role) 관리 (USER, OPERATOR, AUDITOR, ADMIN)
@@ -201,8 +203,6 @@ docker compose -f docker-compose.test.yml down -v
 
 ---
 
----
-
 ## 로그 관련 세팅
 
 ### 로깅 모듈
@@ -215,7 +215,7 @@ docker compose -f docker-compose.test.yml down -v
 docker logs -f gateway-svc
 ```
 
-
+![image](https://github.com/user-attachments/assets/80642c80-a45c-4ee4-a089-189c5ddf9075)
 
 - 위 이미지와 같이 간단하게 어떤 사용자가 언제 어떤 요청을 하였는지 확인 가능
 
