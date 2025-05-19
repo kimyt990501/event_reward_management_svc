@@ -38,10 +38,6 @@
 ### Gateway Service (gateway-svc)
 - JWT 인증 및 역할 기반 권한 검사
 - 각 서비스 API 요청 프록시
-- API 엔드포인트 예시:
-  - `POST /events` (운영자/관리자 권한 필요)
-  - `POST /requests/:eventId` (유저 권한)
-  - `GET /requests` (역할별 조회 가능)
 
 ### API 명세서
 전체 API 설명은 아래 문서를 참고해주세요:
@@ -161,9 +157,9 @@ docker-compose up -d --build
 ## 실행 및 배포
 
 1. `.env` 파일 작성  
-2. `docker-compose up --build` 실행  
-3. 서비스 정상 실행 확인  
-4. Postman 등으로 Gateway 서버 API 호출하여 기능 테스트  
+2. `docker-compose up -d --build` 실행  
+3. `docker ps` 로 서비스 정상 실행 확인  
+4. Postman 등으로 Gateway 서버 API 호출하여 기능 테스트
 
 ---
 
