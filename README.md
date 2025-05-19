@@ -25,6 +25,24 @@
 ## 주요 기능 및 API
 
 - 기본적으로 모든 api 에 대해서 prefix 로 <code>/api</code> 적용
+- 모든 api 응답을 응답 데코레이터로 감싸서 같은 형식으로 응답 받게 설정
+- 성공 응답 데코레이터:
+```json
+{
+  "code": "SUCCESS",
+  "data": {}
+}
+```
+- 실패 응답 데코레이터:
+```json
+{
+  "code": "FAIL",
+  "statusCode": 400,
+  "message": "",
+  "error": ""
+}
+```
+
 
 ### Auth Service (auth-svc)
 - 유저 등록, 로그인
