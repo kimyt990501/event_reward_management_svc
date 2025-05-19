@@ -201,7 +201,7 @@ export class ProxyController {
   /*
    * 보상 요청 내역 확인
   */
-  async getRequests(@Req() req, @Query() query: { status?: string; eventId?: string }) {
+  async getRequests(@Req() req, @Query() query: { status?: string; eventId?: string; userEmail?: string }) {
     try {
       const { data } = await firstValueFrom(
         this.httpService.get(`${EVENT_SVC_URL}/requests`, {

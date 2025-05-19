@@ -61,11 +61,12 @@ export class RequestsService {
     return this.requestModel.find({ userEmail });
   }
 
-  findAll(filter: { status?: string; eventId?: string }) {
+  findAll(filter: { status?: string; eventId?: string; userEmail?: string }) {
     const query: any = {};
 
     if (filter.status) query.status = filter.status;
     if (filter.eventId) query.eventId = filter.eventId;
+    if (filter.userEmail) query.userEmail = filter.userEmail;
 
     return this.requestModel.find(query);
   }

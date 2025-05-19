@@ -40,8 +40,8 @@ export class RequestsController {
 
   @Get()
   @Roles(Role.ADMIN, Role.OPERATOR, Role.AUDITOR)
-  async all(@Query('status') status?: string, @Query('eventId') eventId?: string) {
-    return this.service.findAll({ status, eventId });
+  async all(@Query('status') status?: string, @Query('eventId') eventId?: string, @Query('userEmail') userEmail?: string) {
+    return this.service.findAll({ status, eventId, userEmail });
   }
 
   @Patch('approve/:id')
