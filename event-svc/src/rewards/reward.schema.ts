@@ -7,7 +7,7 @@ export class Reward extends Document {
   name: string;
 
   @Prop()
-  type: string; // 포인트, 아이템, 쿠폰 등
+  type: string;
 
   @Prop()
   quantity: number;

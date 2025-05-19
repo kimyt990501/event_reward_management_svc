@@ -10,7 +10,7 @@ export class Event extends Document {
   description: string;
 
   @Prop({ required: true })
-  condition: string; // 예: "login_3_days"
+  condition: string;
 
   @Prop({ default: true })
   active: boolean;

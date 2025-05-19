@@ -26,7 +26,7 @@ export class RequestsService {
       throw new BadRequestException('이미 보상 요청이 등록되어 있습니다.');
     }
 
-    let status: 'PENDING' | 'SUCCESS' | 'FAIL' = 'PENDING';
+    let status: 'PENDING' | 'SUCCESS' | 'FAILED' = 'PENDING';
     let approvedAt: Date | undefined;
 
     const conditionResult = await this.eventsService.checkCondition(userId, event.condition);
@@ -34,7 +34,7 @@ export class RequestsService {
       status = 'SUCCESS';
       approvedAt = new Date();
     } else if (conditionResult === false) {
-      status = 'FAIL';
+      status = 'FAILED';
     }
 
     await this.requestModel.create({
@@ -50,7 +50,7 @@ export class RequestsService {
       message:
         status === 'SUCCESS'
           ? '보상 지급이 완료되었습니다.'
-          : status === 'FAIL'
+          : status === 'FAILED'
           ? '보상 지급 조건 미달입니다.'
           : '보상 요청이 등록되었습니다.',
       status,
