@@ -162,7 +162,7 @@ describe('Gateway E2E (e2e)', () => {
     expect(createdRequestId).toBeDefined();
   });
 
-  it('보상 중복 요청 테스트 - USER', async () => {
+  it('보상 중복 요청 테스트 (방지 되는지) - USER', async () => {
     await request(app.getHttpServer())
       .post(`/api/requests/${createdEventId}`)
       .set('Authorization', `Bearer ${tokens['USER']}`)
