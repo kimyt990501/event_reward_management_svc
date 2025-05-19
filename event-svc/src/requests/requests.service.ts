@@ -17,11 +17,12 @@ export class RequestsService {
 
   async requestReward(user_email: string, userId: string, eventId: string) {
     const event = await this.eventModel.findById(eventId);
+    const event_title = event.title
     if (!event || !event.active) {
       throw new BadRequestException('존재하지 않거나 비활성 이벤트입니다.');
     }
 
-    const alreadyRequested = await this.requestModel.findOne({ user_email, eventId });
+    const alreadyRequested = await this.requestModel.findOne({ user_email, event_title });
     if (alreadyRequested) {
       throw new BadRequestException('이미 보상 요청이 등록되어 있습니다.');
     }
