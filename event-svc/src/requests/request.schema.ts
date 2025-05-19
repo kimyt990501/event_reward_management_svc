@@ -4,10 +4,13 @@ import { Document, Types } from 'mongoose';
 @Schema()
 export class Request extends Document {
   @Prop({ required: true })
-  user_email: string;
+  userEmail: string;
 
   @Prop({ type: Types.ObjectId, ref: 'Event', required: true })
-  event_title: Types.ObjectId;
+  eventId: Types.ObjectId;
+
+  @Prop({ required: true })
+  eventTitle: string;
 
   @Prop({ default: 'PENDING' })
   status: 'PENDING' | 'SUCCESS' | 'FAILED';
