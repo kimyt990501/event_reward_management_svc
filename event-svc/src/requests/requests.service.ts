@@ -61,8 +61,13 @@ export class RequestsService {
     return this.requestModel.find({ userEmail });
   }
 
-  findAll() {
-    return this.requestModel.find();
+  findAll(filter: { status?: string; eventId?: string }) {
+    const query: any = {};
+
+    if (filter.status) query.status = filter.status;
+    if (filter.eventId) query.eventId = filter.eventId;
+
+    return this.requestModel.find(query);
   }
 
   async findById(id: string) {
