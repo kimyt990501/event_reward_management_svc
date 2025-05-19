@@ -9,7 +9,8 @@ import {
   Param,
   Patch,
   HttpException,
-  Delete
+  Delete,
+  Query
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -200,11 +201,12 @@ export class ProxyController {
   /*
    * 보상 요청 내역 확인
   */
-  async getRequests(@Req() req) {
+  async getRequests(@Req() req, @Query() query: { status?: string; eventId?: string }) {
     try {
       const { data } = await firstValueFrom(
         this.httpService.get(`${EVENT_SVC_URL}/requests`, {
           headers: { Authorization: req.headers.authorization },
+          params: query,
         }),
       );
       return data;
