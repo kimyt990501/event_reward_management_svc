@@ -175,9 +175,9 @@ docker-compose up -d --build
 
 ---
 
-## 도커 테스트 코드
+## 도커 통합 테스트
 
-- 각 서비스별 단위 테스트 및 통합 테스트 포함
+- 통합 테스트
 - Jest 사용
 - 테스트 시나리오
   - 회원가입 테스트 (USER, OPERATOR, ADMIN, AUDITOR)
