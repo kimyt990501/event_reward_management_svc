@@ -12,7 +12,7 @@
 {
   "email": "user5@example.com",
   "password": "password5",
-  "roles": ["USER"]
+  "roles": ["USER"] // AUDITOR, ADMIN, OPERATOR
 }
 ```
 
@@ -42,7 +42,8 @@
 ```json
 {
   "email": "user1@example.com",
-  "password": "password1"
+  "password": "password1",
+  "invited_by": "초대한 사람의 이메일" // 선택 입력 필드
 }
 ```
 
@@ -222,11 +223,11 @@
   "code": "SUCCESS",
   "data": [
     {
-      "_id": "6829a0b6423c30c416d8ee74",
-      "userId": "682863fc04fc6d6693a1f1f9",
-      "eventId": "68299faa423c30c416d8ee69",
+      "_id": "682ad8f2fb6a5a2d145748fc",
+      "user_email": "user1@example.com",
+      "event_title": "첫 구매 보상 이벤트",
       "status": "PENDING",
-      "requestedAt": "2025-05-18T08:56:22.842Z",
+      "requestedAt": "2025-05-19T07:08:34.565Z",
       "__v": 0
     }
   ]
@@ -241,11 +242,11 @@
 - **성공 응답**:
 ```json
 {
-    "code": "SUCCESS",
-    "data": {
-        "message": "보상 요청이 등록되었습니다.",
-        "status": "PENDING"
-    }
+  "code": "SUCCESS",
+  "data": {
+    "message": "보상 요청이 등록되었습니다.",
+    "status": "PENDING"
+  }
 }
 ```
 
@@ -290,13 +291,13 @@
   "code": "SUCCESS",
   "data": [
     {
-      "_id": "6829a0b6423c30c416d8ee74",
-      "userId": "682863fc04fc6d6693a1f1f9",
-      "eventId": "68299faa423c30c416d8ee69",
+      "_id": "682ad8f2fb6a5a2d145748fc",
+      "user_email": "user1@example.com",
+      "event_title": "첫 구매 보상 이벤트",
       "status": "SUCCESS",
-      "requestedAt": "2025-05-18T08:56:22.842Z",
+      "requestedAt": "2025-05-19T07:08:34.565Z",
       "__v": 0,
-      "approvedAt": "2025-05-18T08:57:19.615Z"
+      "approvedAt": "2025-05-19T07:09:14.020Z"
     }
   ]
 }
