@@ -162,6 +162,13 @@ describe('Gateway E2E (e2e)', () => {
     expect(createdRequestId).toBeDefined();
   });
 
+  it('보상 중복 요청 테스트 - USER', async () => {
+    await request(app.getHttpServer())
+      .post(`/api/requests/${createdEventId}`)
+      .set('Authorization', `Bearer ${tokens['USER']}`)
+      .expect(400);
+  });
+
   it('기존 이벤트 삭제 후 새로운 이벤트 및 보상 등록 테스트 (이벤트 삭제 시 연결된 보상도 같이 삭제되는지) - ADMIN, OPERATOR', async () => {
     // 이벤트 삭제
     await request(app.getHttpServer())
