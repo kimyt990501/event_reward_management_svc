@@ -100,12 +100,14 @@ docker-compose up -d --build
 
 - 각 서비스별 단위 테스트 및 통합 테스트 포함
 - Jest 사용
-- 예시 테스트 시나리오
-  - AuthService : 유저 인증 및 JWT 발급 검증
-  - EventsService : 이벤트 생성/조회 테스트
-  - RequestsService : 보상 요청 시나리오 및 중복 방지 검증
-  - RewardsService : 보상 등록 및 조회 테스트
-  - ProxyController : API 프록시 정상 동작 테스트
+- 테스트 시나리오
+  - 회원가입 테스트 (USER, OPERATOR, ADMIN, AUDITOR)
+  - 로그인 & 토큰 저장 테스트
+  - 이벤트 생성 테스트 - ADMIN, OPERATOR
+  - REWARD 생성 - ADMIN, OPERATOR
+  - 사용자 초대 후 보상 요청 테스트 (보상 조건 만족 시 자동 승인) - USER
+  - 기존 이벤트 삭제 후 새로운 이벤트 및 보상 등록 (이벤트 삭제 시 연결된 보상도 같이 삭제되는지) - ADMIN
+  - 보상 요청 관리자가 확인하여 수동으로 승인/거절 테스트 - ADMIN
 
 ## 도커 환경 테스트 실행 방법
 
@@ -131,14 +133,53 @@ docker compose -f docker-compose.test.yml down -v
 - JWT 인증 및 권한 검증으로 보안 강화
 - Docker 기반 배포 및 실행 환경 구성
 
----
+### 이벤트 및 보상 종류
 
-## 추가 참고사항
+#### 1. \#일 간 연속 로그인 시 쿠폰 지급
+- 예시 이벤트 등록 요청 바디 ([POST] /api/events)
+```json
+{
+  "title": "3일 연속 출석 이벤트",
+  "description": "3일 연속 로그인하면 보상 지급",
+  "condition": "login_3_days",
+  "active": true,
+  "startAt": "2025-05-01T00:00:00Z",
+  "endAt": "2025-06-01T00:00:00Z"
+}
+```
+- 예시 보상 등록 요청 바디 ([POST] /api/rewards)
+```json
+{
+  "name": "3일 연속 로그인 쿠폰",
+  "type": "coupon",
+  "quantity": 1,
+  "eventId": "이벤트 ID"
+}
+```
 
-- 보상 조건 및 이벤트 종류는 자유롭게 확장 가능
-- 테스트 시 JWT 토큰을 여러 역할별로 발급 받아 테스트하는 것을 권장
-- 자세한 API 명세 및 사용법은 코드 내 Swagger 문서 또는 별도 문서 참고
-- 환경 변수 및 서비스 포트는 `.env` 파일에서 조정 가능
+#### 2. \#명의 회원 초대하여 회원가입 시 쿠폰 지급
+- 예시 이벤트 등록 요청 바디 ([POST] /api/events)
+```json
+{
+  "title": "친구 3명 초대 이벤트",
+  "description": "친구 3명을 초대하면 보상을 드립니다.",
+  "condition": "invite_3_friends",
+  "active": true,
+  "startAt": "2025-05-10T00:00:00.000Z",
+  "endAt": "2025-07-10T00:00:00.000Z"
+}
+```
+- 예시 보상 등록 요청 바디 ([POST] /api/rewards)
+```json
+{
+  "name": "친구 3명 초대 쿠폰",
+  "type": "coupon",
+  "quantity": 1,
+  "eventId": "이벤트 ID"
+}
+```
+
+- 위의 이벤트들은 따로 관리자가 보상 요청을 확인하여 승인/거절할 필요 없이 내부 로직으로 자동 승인/거절하게 설계하였습니다.
 
 ---
 
