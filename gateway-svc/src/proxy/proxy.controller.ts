@@ -27,6 +27,9 @@ export class ProxyController {
 
   @UseGuards()
   @Post('/login')
+  /*
+  * 로그인
+  */
   async login(@Body() body) {
     try {
       const { data } = await firstValueFrom(
@@ -46,6 +49,9 @@ export class ProxyController {
 
   @UseGuards()
   @Post('/register')
+  /*
+  * 회원가입
+  */
   async register(@Body() body) {
     try {
       const { data } = await firstValueFrom(
@@ -315,10 +321,10 @@ export class ProxyController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.OPERATOR)
   @Patch('/requests/approve/:id')
   /*
-  * 보상 요청 승인 처리 (관리자용)
+  * 보상 요청 승인 처리
   */
   async approveRequest(@Req() req, @Param('id') id: string) {
     try {
@@ -340,10 +346,10 @@ export class ProxyController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.ADMIN, Role.OPERATOR)
   @Patch('/requests/reject/:id')
   /*
-  * 보상 요청 거부 처리 (관리자용)
+  * 보상 요청 거부 처리
   */
   async rejectRequest(@Req() req, @Param('id') id: string) {
     try {
@@ -365,7 +371,7 @@ export class ProxyController {
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.USER)
+  @Roles(Role.USER, Role.ADMIN)
   @Get('/requests/my')
   /*
   * 로그인한 유저의 보상 요청 내역 조회
