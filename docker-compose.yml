@@ -12,6 +12,7 @@ services:
       MONGO_INITDB_DATABASE: ${MONGO_DB}
     volumes:
       - mongo-data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
 
   auth-svc:
     build: ./auth-svc
