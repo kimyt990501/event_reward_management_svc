@@ -217,7 +217,7 @@
 ### [GET] /api/requests?status=&eventId=&userEmail
 - **설명**: 모든 보상 요청 목록 조회
 - **권한**: `ADMIN`, `OPERATOR`, `AUDITOR`  
-- **쿼리 파라미터**: status: 요청 상태 값 (PENDING, SUCCESS, FAIL), eventId: 이벤트 ID, userEmail: 사용자 이메일
+- **쿼리 파라미터**: status: 요청 상태 값 (PENDING, SUCCESS, FAILED), eventId: 이벤트 ID, userEmail: 사용자 이메일
 - **성공 응답**:
 ```json
 {
