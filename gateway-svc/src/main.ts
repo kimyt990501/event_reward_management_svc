@@ -22,6 +22,6 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   
   const config = app.get(ConfigService);
-  await app.listen(config.get('GATEWAY_PORT') || 3300);
+  await app.listen(config.get('GATEWAY_PORT') || 3000);
 }
 bootstrap();
