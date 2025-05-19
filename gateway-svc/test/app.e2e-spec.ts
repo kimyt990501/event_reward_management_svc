@@ -162,7 +162,7 @@ describe('Gateway E2E (e2e)', () => {
     expect(createdRequestId).toBeDefined();
   });
 
-  it('기존 이벤트 삭제 후 새로운 이벤트 및 보상 등록 테스트 (이벤트 삭제 시 연결된 보상도 같이 삭제되는지) - ADMIN', async () => {
+  it('기존 이벤트 삭제 후 새로운 이벤트 및 보상 등록 테스트 (이벤트 삭제 시 연결된 보상도 같이 삭제되는지) - ADMIN, OPERATOR', async () => {
     // 이벤트 삭제
     await request(app.getHttpServer())
       .delete(`/api/events/${createdEventId}`)
@@ -227,7 +227,7 @@ describe('Gateway E2E (e2e)', () => {
     expect(createdRequestId).toBeDefined();
   } )
 
-  it('보상 요청 관리자가 확인하여 수동으로 승인/거절 테스트 - ADMIN', async () => {
+  it('보상 요청 관리자가 확인하여 수동으로 승인/거절 테스트 - ADMIN, OPERATOR', async () => {
     // 승인
     await request(app.getHttpServer())
       .patch(`/api/requests/approve/${createdRequestId}`)
