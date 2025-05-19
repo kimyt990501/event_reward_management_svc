@@ -63,7 +63,7 @@ describe('Gateway E2E (e2e)', () => {
     await app.init();
   });
 
-  it('회원가입', async () => {
+  it('회원가입 테스트 (USER, OPERATOR, ADMIN, AUDITOR)', async () => {
     for (const user of users) {
       await request(app.getHttpServer())
         .post('/api/register')
@@ -72,7 +72,7 @@ describe('Gateway E2E (e2e)', () => {
     }
   });
 
-  it('로그인 & 토큰 저장', async () => {
+  it('로그인 & 토큰 저장 테스트', async () => {
     for (const user of users) {
       const res = await request(app.getHttpServer())
         .post('/api/login')
@@ -83,7 +83,7 @@ describe('Gateway E2E (e2e)', () => {
     }
   });
 
-  it('ADMIN 또는 OPERATOR만 이벤트 생성 가능', async () => {
+  it('이벤트 생성 테스트 - ADMIN, OPERATOR]', async () => {
     const eventPayload = {
       title: "친구 3명 초대 이벤트",
       description: "친구 3명을 초대하면 보상을 드립니다.",
@@ -120,7 +120,7 @@ describe('Gateway E2E (e2e)', () => {
       .expect(403);
   });
 
-  it('REWARD 생성 - ADMIN 또는 OPERATOR', async () => {
+  it('REWARD 생성 테스트 - ADMIN, OPERATOR', async () => {
     const rewardPayload = {
       name: "친구 3명 초대 쿠폰",
       type: "coupon",
@@ -135,7 +135,7 @@ describe('Gateway E2E (e2e)', () => {
       .expect(201);
   });
 
-  it('사용자 초대 후 보상 요청 테스트', async () => {
+  it('사용자 초대 후 보상 요청 테스트 (보상 조건 만족 시 자동 승인) - USER', async () => {
     // 한 사용자의 아이디를 초대 아이디에 넣어서 총 세명 회원가입 실시
     for (const user of invited_users) {
       await request(app.getHttpServer())
@@ -162,7 +162,7 @@ describe('Gateway E2E (e2e)', () => {
     expect(createdRequestId).toBeDefined();
   });
 
-  it('기존 이벤트 삭제 후 새로운 이벤트 및 보상 등록 후 승인/거절 테스트 - ADMIN만 가능', async () => {
+  it('기존 이벤트 삭제 후 새로운 이벤트 및 보상 등록 테스트 (이벤트 삭제 시 연결된 보상도 같이 삭제되는지) - ADMIN', async () => {
     // 이벤트 삭제
     await request(app.getHttpServer())
       .delete(`/api/events/${createdEventId}`)
@@ -227,7 +227,7 @@ describe('Gateway E2E (e2e)', () => {
     expect(createdRequestId).toBeDefined();
   } )
 
-  it('승인/거절 - ADMIN만 가능', async () => {
+  it('보상 요청 관리자가 확인하여 수동으로 승인/거절 테스트 - ADMIN', async () => {
     // 승인
     await request(app.getHttpServer())
       .patch(`/api/requests/approve/${createdRequestId}`)
