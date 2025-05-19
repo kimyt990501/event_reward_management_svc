@@ -7,7 +7,8 @@ import {
   UseGuards,
   Inject,
   Patch,
-  NotFoundException
+  NotFoundException,
+  Query
 } from '@nestjs/common';
 import { RequestsService } from './requests.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -39,8 +40,8 @@ export class RequestsController {
 
   @Get()
   @Roles(Role.ADMIN, Role.OPERATOR, Role.AUDITOR)
-  async all() {
-    return this.service.findAll();
+  async all(@Query('status') status?: string, @Query('eventId') eventId?: string) {
+    return this.service.findAll({ status, eventId });
   }
 
   @Patch('approve/:id')
