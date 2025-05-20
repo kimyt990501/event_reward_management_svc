@@ -105,8 +105,10 @@ JWT_EXPIRES_IN=1h
 
 ## Docker Compose 실행
 
+- 아래 코드 중 하나를 실행
 ```bash
 docker-compose up -d --build
+docker compose up -d --build
 ```
 
 - MongoDB 포함하여 3개 서비스가 자동으로 빌드 및 실행됩니다.
@@ -198,7 +200,7 @@ sudo service docker status
 
 ### B. 환경변수 세팅 후 프로그램 실행
 1. `.env` 파일 작성  
-2. `docker-compose up -d --build` 실행  
+2. `docker-compose up -d --build` 혹은 `docker compose up -d --build` 실행  
 3. `docker ps` 로 서비스 정상 실행 확인  
 4. Postman 등으로 Gateway 서버 API 호출하여 기능 테스트
 
