@@ -21,8 +21,8 @@ export class EventsController {
     return this.service.findAllSummary();
   }
 
-  @Get('detail/:id')
-  async getEventDetail(@Param('id') id: string) {
+  @Get('detail/:eventId')
+  async getEventDetail(@Param('eventId') id: string) {
     return this.service.findDetailById(id);
   }
 

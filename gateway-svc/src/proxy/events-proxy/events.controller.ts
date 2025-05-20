@@ -22,9 +22,9 @@ export class EventsController {
     return this.service.findAll(req);
   }
 
-  @Get(':id')
+  @Get(':eventId')
   @Roles(Role.ADMIN, Role.OPERATOR)
-  findOne(@Req() req, @Param('id') id: string) {
+  findOne(@Req() req, @Param('eventId') id: string) {
     return this.service.findOne(req, id);
   }
 
