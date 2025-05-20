@@ -182,14 +182,14 @@ docker-compose up -d --build
 
 ### A. 도커 상태 확인 및 실행
 
-- os 가 윈도우인 경우
+#### os 가 윈도우인 경우
 ```bash
 docker info
 ```
-- 위의 코드 결과가 도커 정보가 나온다면 도커가 실행 중이므로 바로 A단계로 이동 
-- 도커 정보가 출력되지 않는다면 docker desktop 실행 후 다시 확인 후 B단계로 이동
+- 위의 코드 결과로 도커 정보가 나온다면 도커가 실행 중이므로 바로 A단계로 이동 
+- 도커 정보가 출력되지 않는다면 docker desktop 실행한 다음 다시 확인 후 B단계로 이동
 
-- os 가 리눅스인 경우
+#### os 가 리눅스인 경우
 ```bash
 sudo service docker status
 ```
