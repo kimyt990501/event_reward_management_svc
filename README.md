@@ -176,7 +176,27 @@ docker-compose up -d --build
 ---
 
 ## 실행 및 배포
+- (본 프로젝트는 도커가 설치되어 있다는 전제하에 작성된 것입니다)
+- 우선 본 레포지토리를 <code>git clone</code> 받아준다
+- 이후 도커가 실행중인지 확인하고 도커가 실행중이라면 바로 B 단계를, 도커가 실행중이 아니라면 A 단계를 거친 후 B 단계를 실시하면 된다.
 
+### A. 도커 상태 확인 및 실행
+
+- os 가 윈도우인 경우
+```bash
+docker info
+```
+- 위의 코드 결과가 도커 정보가 나온다면 도커가 실행 중이므로 바로 A단계로 이동 
+- 도커 정보가 출력되지 않는다면 docker desktop 실행 후 다시 확인 후 B단계로 이동
+
+- os 가 리눅스인 경우
+```bash
+sudo service docker status
+```
+- 위의 코드 결과로 도커 데몬이 ACTIVE 상태라면 바로 B단계로 이동
+- 도커 데몬이 INACTIVE 상태라면 <code>sudo systemctl start docker</code> 혹은 <code>sudo service docker start</code> 를 사용해 도커 데몬 실행 후 B단계로 이동
+
+### B. 환경변수 세팅 후 프로그램 실행
 1. `.env` 파일 작성  
 2. `docker-compose up -d --build` 실행  
 3. `docker ps` 로 서비스 정상 실행 확인  
