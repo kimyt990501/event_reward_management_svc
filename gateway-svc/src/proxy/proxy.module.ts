@@ -1,17 +1,21 @@
 import { Module } from '@nestjs/common';
-import { HttpModule } from '@nestjs/axios';
-import { AuthController } from './auth-proxy/auth.controller';
-import { EventsController } from './events-proxy/events.controller';
-import { RewardsController } from './rewards-proxy/rewards.controller';
-import { RequestsController } from './requests-proxy/requests.controller';
+import { AuthModule } from './auth-proxy/auth.module';
+import { EventsModule } from './events-proxy/events.module';
+import { RewardsModule } from './rewards-proxy/rewards.module';
+import { RequestsModule } from './requests-proxy/requests.module';
 
 @Module({
-  imports: [HttpModule],
-  controllers: [
-    AuthController,
-    EventsController,
-    RewardsController,
-    RequestsController,
+  imports: [
+    AuthModule,
+    EventsModule,
+    RewardsModule,
+    RequestsModule,
+  ],
+  exports: [
+    AuthModule,
+    EventsModule,
+    RewardsModule,
+    RequestsModule,
   ],
 })
 export class ProxyModule {}
